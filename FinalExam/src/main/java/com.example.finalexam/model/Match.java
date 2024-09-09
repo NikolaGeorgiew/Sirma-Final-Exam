@@ -1,6 +1,9 @@
 package com.example.finalexam.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.LocalDate;
 
@@ -10,9 +13,14 @@ public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull(message = "Team A ID cannot be null")
     private Long aTeamID;
+    @NotNull(message = "Team B ID cannot be null")
     private Long bTeamID;
+    @NotNull(message = "Date cannot be null")
+    @PastOrPresent(message = "Match date cannot be in the future")
     private LocalDate date;
+    @NotBlank(message = "Score cannot be blank")
     private String score;
 
     public Long getId() {

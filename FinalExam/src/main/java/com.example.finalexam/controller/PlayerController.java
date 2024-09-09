@@ -37,29 +37,20 @@ public class PlayerController {
     }
     @GetMapping("/players/{id}")
     public ResponseEntity<Player> getPlayerById(@PathVariable Long id) {
-        Optional<Player> player = playerService.getPlayerById(id);
-        return player.map(ResponseEntity::ok)
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Player player = playerService.getPlayerById(id);
+        return ResponseEntity.ok(player);
     }
     //Create a new player
     @PostMapping("/players/create")
     public ResponseEntity<Player> createPlayer(@RequestBody Player player) {
-        try {
-            Player createdPlayer = playerService.createPlayer(player);
-            return new ResponseEntity<>(createdPlayer, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+        Player createdPlayer = playerService.createPlayer(player);
+        return new ResponseEntity<>(createdPlayer, HttpStatus.CREATED);
     }
     //TODO: UPDATE method
     //Delete a player by ID
     @DeleteMapping("/players/{id}")
     public ResponseEntity<Void> deletePlayer(@PathVariable Long id) {
-        if (playerService.getPlayerById(id).isPresent()) {
-            playerService.deletePlayer(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        playerService.deletePlayer(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

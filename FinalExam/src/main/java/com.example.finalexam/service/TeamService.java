@@ -1,13 +1,12 @@
 package com.example.finalexam.service;
 
-import com.example.finalexam.model.Player;
+import com.example.finalexam.exceptions.EntityNotFoundException;
 import com.example.finalexam.model.Team;
 import com.example.finalexam.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TeamService {
@@ -16,24 +15,34 @@ public class TeamService {
 
     //Get all teams
     public List<Team> getAllTeams() {
-        return teamRepository.findAll();
+        List<Team> teams = teamRepository.findAll();
+        //Check if the list is empty
+        if (teams.isEmpty()) {
+            throw new EntityNotFoundException("No teams found");
+        }
+        return teams;
     }
     //Get a team by ID
-    //TODO validation if there is not such a team
-    public Optional<Team> getTeamById(Long id){
-        return teamRepository.findById(id);
+    public Team getTeamById(Long id){
+        return teamRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Team with ID " + id + " not found"));
     }
     //Create a team
     public Team createTeam(Team team) {
         //Check if the team already exists
-        if (team.getId() != null && teamRepository.existsById(team.getId())){
-            throw new IllegalArgumentException("Team already exists.");
+        boolean teamExists = teamRepository.existsByNameAndManagerFullNameAndTeamGroup(
+                team.getName(), team.getManagerFullName(), team.getTeamGroup());
+        if (teamExists) {
+            throw new EntityNotFoundException("Team already exists");
         }
         return teamRepository.save(team);
     }
     //TODO: UPDATE A TEAM
     //Delete a team by ID
     public void deleteTeam(Long id) {
+        //Check if the team exists
+        Team team = teamRepository
+                .findById(id).orElseThrow(() -> new EntityNotFoundException("Team with ID " + "id" + " not found"));
+        //If exists delete it
         teamRepository.deleteById(id);
     }
 }

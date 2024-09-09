@@ -1,6 +1,7 @@
 package com.example.finalexam.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "teams")
@@ -8,8 +9,11 @@ public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank(message = "Team name cannot be blank")
     private String name;
+    @NotBlank(message = "Manager full name cannot be blank")
     private String managerFullName;
+    @NotBlank(message = "Team group cannot be blank")
     private String teamGroup;
 
     public Long getId() {

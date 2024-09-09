@@ -39,28 +39,19 @@ public class TeamController {
     //Get a team by ID
     @GetMapping("/teams/{id}")
     public ResponseEntity<Team> getTeamById(@PathVariable Long id) {
-        Optional<Team> team = teamService.getTeamById(id);
-        return team.map(ResponseEntity::ok)
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Team team = teamService.getTeamById(id);
+        return ResponseEntity.ok(team);
     }
     //Create a team
     @PostMapping("/teams/create")
     public ResponseEntity<Team> createTeam(@RequestBody Team team) {
-        try {
-            Team createdTeam = teamService.createTeam(team);
-            return new ResponseEntity<>(createdTeam, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+        Team createdTeam = teamService.createTeam(team);
+        return new ResponseEntity<>(createdTeam, HttpStatus.CREATED);
     }
     //TODO: UPDATE A TEAM
     @DeleteMapping("/teams/{id}")
     public ResponseEntity<Void> deleteTeam(@PathVariable Long id) {
-        if (teamService.getTeamById(id).isPresent()) {
-            teamService.deleteTeam(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        teamService.deleteTeam(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
