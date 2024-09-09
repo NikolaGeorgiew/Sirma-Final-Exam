@@ -46,7 +46,12 @@ public class PlayerController {
         Player createdPlayer = playerService.createPlayer(player);
         return new ResponseEntity<>(createdPlayer, HttpStatus.CREATED);
     }
-    //TODO: UPDATE method
+    //Update a player
+    @PutMapping("/players/{id}")
+    public ResponseEntity<Player> updatePlayer(@PathVariable Long id, @RequestBody Player updatedPlayer) {
+        Player player = playerService.updatePlayer(id, updatedPlayer);
+        return ResponseEntity.ok(player);
+    }
     //Delete a player by ID
     @DeleteMapping("/players/{id}")
     public ResponseEntity<Void> deletePlayer(@PathVariable Long id) {

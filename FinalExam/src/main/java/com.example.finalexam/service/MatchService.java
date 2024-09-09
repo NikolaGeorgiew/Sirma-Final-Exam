@@ -41,7 +41,18 @@ public class MatchService {
         return matchRepository.save(match);
 
     }
-    //TODO: UPDATE MATCH
+    //Update a match
+    public Match updateMatch(Long id, Match updatedMatch) {
+        Match existingMatch = matchRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Match with ID " + id + " not found"));
+
+        existingMatch.setaTeamID(updatedMatch.getaTeamID());
+        existingMatch.setbTeamID(updatedMatch.getbTeamID());
+        existingMatch.setDate(updatedMatch.getDate());
+        existingMatch.setScore(updatedMatch.getScore());
+
+        return matchRepository.save(existingMatch);
+    }
     //Delete a match by ID
     public void deleteMatch(Long id) {
         //Check if the match exist

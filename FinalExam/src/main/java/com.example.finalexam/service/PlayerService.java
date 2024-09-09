@@ -36,7 +36,18 @@ public class PlayerService {
         }
         return playerRepository.save(player);
     }
-    //TODO: UPDATE method
+    //Update a Player
+    public Player updatePlayer(Long id, Player updatedPlayer) {
+        Player existingPlayer = playerRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Player with ID " + id + " not found"));
+        //Update the player's details
+        existingPlayer.setTeamNumber(updatedPlayer.getTeamNumber());
+        existingPlayer.setPosition(updatedPlayer.getPosition());
+        existingPlayer.setFullName(updatedPlayer.getFullName());
+        existingPlayer.setTeam(updatedPlayer.getTeam());
+
+        return playerRepository.save(existingPlayer);
+    }
     //Delete a player by ID
     public void deletePlayer(Long id) {
         //Check if the player exists

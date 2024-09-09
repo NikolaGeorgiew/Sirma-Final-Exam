@@ -48,7 +48,15 @@ public class TeamController {
         Team createdTeam = teamService.createTeam(team);
         return new ResponseEntity<>(createdTeam, HttpStatus.CREATED);
     }
-    //TODO: UPDATE A TEAM
+
+    //Update a team
+    @PutMapping("/teams/{id}")
+    public ResponseEntity<Team> updateTeam(@PathVariable Long id, @RequestBody Team updatedTeam) {
+        Team team = teamService.updateTeam(id, updatedTeam);
+        return ResponseEntity.ok(team);
+    }
+
+    //Delete a team
     @DeleteMapping("/teams/{id}")
     public ResponseEntity<Void> deleteTeam(@PathVariable Long id) {
         teamService.deleteTeam(id);

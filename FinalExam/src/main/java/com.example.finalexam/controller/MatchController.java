@@ -45,7 +45,12 @@ public class MatchController {
             Match createdMatch = matchService.createMatch(match);
             return new ResponseEntity<>(createdMatch, HttpStatus.CREATED);
     }
-    //TODO: Update match
+    //Update a match
+    @PutMapping("/matches/{id}")
+    public ResponseEntity<Match> updateMatch(@PathVariable Long id, @RequestBody Match match) {
+        Match updatedMatch = matchService.updateMatch(id, match);
+        return new ResponseEntity<>(updatedMatch, HttpStatus.OK);
+    }
     //Delete a match by ID
     @DeleteMapping("/matches/{id}")
     public ResponseEntity<Void> deleteMatch(@PathVariable Long id) {

@@ -36,7 +36,17 @@ public class TeamService {
         }
         return teamRepository.save(team);
     }
-    //TODO: UPDATE A TEAM
+    //Update a team
+    public Team updateTeam(Long id, Team updatedTeam) {
+        Team existingTeam = teamRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Team with ID " + id + " not found"));
+        //Update the team's details
+        existingTeam.setName(updatedTeam.getName());
+        existingTeam.setManagerFullName(updatedTeam.getManagerFullName());
+        existingTeam.setTeamGroup(updatedTeam.getTeamGroup());
+
+        return teamRepository.save(existingTeam);
+    }
     //Delete a team by ID
     public void deleteTeam(Long id) {
         //Check if the team exists
