@@ -22,10 +22,13 @@ public class TeamService {
         }
         return teams;
     }
+
     //Get a team by ID
-    public Team getTeamById(Long id){
+    public Team getTeamById(Long id) {
+        //Check if team is missing and returning entity or exception message
         return teamRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Team with ID " + id + " not found"));
     }
+
     //Create a team
     public Team createTeam(Team team) {
         //Check if the team already exists
@@ -36,6 +39,7 @@ public class TeamService {
         }
         return teamRepository.save(team);
     }
+
     //Update a team
     public Team updateTeam(Long id, Team updatedTeam) {
         Team existingTeam = teamRepository.findById(id)
@@ -47,6 +51,7 @@ public class TeamService {
 
         return teamRepository.save(existingTeam);
     }
+
     //Delete a team by ID
     public void deleteTeam(Long id) {
         //Check if the team exists
