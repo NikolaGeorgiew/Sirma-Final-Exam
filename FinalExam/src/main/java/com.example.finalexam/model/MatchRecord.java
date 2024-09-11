@@ -9,11 +9,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "records")
 @ValidTimeRange
-public class MatchRecord {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class MatchRecord extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "player_id")
     @NotNull(message = "Player cannot be null")
@@ -28,15 +24,6 @@ public class MatchRecord {
     @Min(value = 0, message = "To minutes must be greater than or equal to 0")
     @Max(value = 120, message = "To minutes must be less than or equal to 120") //Sometimes there is extra added time
     private Integer toMinutes;
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Player getPlayer() {
         return player;

@@ -6,10 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "players")
-public class Player {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Player extends BaseEntity {
     @NotNull(message = "Team number cannot be null")
     private Integer teamNumber;
     @NotBlank(message = "Position cannot be blank")
@@ -21,14 +18,6 @@ public class Player {
     @JoinColumn(name = "team_id")
     @NotNull(message = "Team cannot be null")
     private Team team;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Integer getTeamNumber() {
         return teamNumber;

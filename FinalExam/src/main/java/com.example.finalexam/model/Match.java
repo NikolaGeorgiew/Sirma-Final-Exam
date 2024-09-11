@@ -9,10 +9,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "matches")
-public class Match {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Match extends BaseEntity {
     @NotNull(message = "Team A ID cannot be null")
     private Long aTeamID;
     @NotNull(message = "Team B ID cannot be null")
@@ -22,14 +19,6 @@ public class Match {
     private LocalDate date;
     @NotBlank(message = "Score cannot be blank")
     private String score;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Long getaTeamID() {
         return aTeamID;

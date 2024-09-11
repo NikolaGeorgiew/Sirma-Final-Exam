@@ -10,42 +10,43 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/players")
 public class PlayerController {
     @Autowired
     private PlayerService playerService;
 
     //Get all players
-    @GetMapping("/players")
+    @GetMapping()
     public ResponseEntity<List<Player>> getAllPlayers() {
-        List<Player> players = playerService.getAllPlayers();
+        List<Player> players = playerService.getAll();
         return new ResponseEntity<>(players, HttpStatus.OK);
     }
 
     //Get player by ID
-    @GetMapping("/players/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Player> getPlayerById(@PathVariable Long id) {
-        Player player = playerService.getPlayerById(id);
+        Player player = playerService.getEntityById(id);
         return ResponseEntity.ok(player);
     }
 
     //Create a new player
-    @PostMapping("/players/create")
+    @PostMapping("/create")
     public ResponseEntity<Player> createPlayer(@RequestBody Player player) {
-        Player createdPlayer = playerService.createPlayer(player);
+        Player createdPlayer = playerService.createEntity(player);
         return new ResponseEntity<>(createdPlayer, HttpStatus.CREATED);
     }
 
     //Update a player
-    @PutMapping("/players/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Player> updatePlayer(@PathVariable Long id, @RequestBody Player updatedPlayer) {
-        Player player = playerService.updatePlayer(id, updatedPlayer);
+        Player player = playerService.updateEntity(id, updatedPlayer);
         return ResponseEntity.ok(player);
     }
 
     //Delete a player by ID
-    @DeleteMapping("/players/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePlayer(@PathVariable Long id) {
-        playerService.deletePlayer(id);
+        playerService.deleteEntity(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

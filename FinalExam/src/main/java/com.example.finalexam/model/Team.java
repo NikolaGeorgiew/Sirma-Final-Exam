@@ -3,26 +3,17 @@ package com.example.finalexam.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "teams")
-public class Team {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Team extends BaseEntity {
     @NotBlank(message = "Team name cannot be blank")
     private String name;
     @NotBlank(message = "Manager full name cannot be blank")
     private String managerFullName;
     @NotBlank(message = "Team group cannot be blank")
     private String teamGroup;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -46,5 +37,21 @@ public class Team {
 
     public void setTeamGroup(String teamGroup) {
         this.teamGroup = teamGroup;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false; //Compare id first
+        Team team = (Team) o;
+        return Objects.equals(name, team.name) &&
+                Objects.equals(managerFullName, team.managerFullName) &&
+                Objects.equals(teamGroup, team.teamGroup);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name, managerFullName, teamGroup);
     }
 }

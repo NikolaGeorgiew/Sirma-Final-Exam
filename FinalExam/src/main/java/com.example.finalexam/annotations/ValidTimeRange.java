@@ -1,5 +1,6 @@
 package com.example.finalexam.annotations;
 
+import com.example.finalexam.constants.ErrorMessages;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -12,9 +13,10 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidTimeRange {
-    String message() default "To minutes must be greater than or equal to from minutes";
+    String message() default ErrorMessages.MINUTES_VALIDATION_MESSAGE;
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 }
+

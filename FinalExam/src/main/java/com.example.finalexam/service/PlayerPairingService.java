@@ -1,8 +1,7 @@
 package com.example.finalexam.service;
 
 import com.example.finalexam.model.MatchRecord;
-import com.example.finalexam.repository.PlayerRepository;
-import com.example.finalexam.repository.RecordRepository;
+import com.example.finalexam.repository.MatchRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +13,7 @@ import java.util.stream.Collectors;
 @Service
 public class PlayerPairingService {
     @Autowired
-    private RecordRepository recordRepository;
-    @Autowired
-    private PlayerRepository playerRepository;
+    private MatchRecordRepository recordRepository;
 
     //Helper method to calculate overlap in minutes for two players in a match
     private int calculateOverlap(MatchRecord record1, MatchRecord record2) {

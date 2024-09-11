@@ -15,3 +15,4 @@ public class ValidTimeRangeValidator implements ConstraintValidator<ValidTimeRan
         return value.getToMinutes() >= value.getFromMinutes();
     }
 }
+

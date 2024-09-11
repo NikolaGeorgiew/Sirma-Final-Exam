@@ -1,12 +1,14 @@
 package com.example.finalexam.utils;
 
+import com.example.finalexam.constants.DateFormatConstants;
+import com.example.finalexam.constants.ErrorMessages;
 import com.example.finalexam.model.Match;
 import com.example.finalexam.model.MatchRecord;
 import com.example.finalexam.model.Player;
 import com.example.finalexam.model.Team;
 import com.example.finalexam.repository.MatchRepository;
 import com.example.finalexam.repository.PlayerRepository;
-import com.example.finalexam.repository.RecordRepository;
+import com.example.finalexam.repository.MatchRecordRepository;
 import com.example.finalexam.repository.TeamRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +21,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import static com.example.finalexam.constants.FilePaths.*;
 
 @Component
 public class CsvParser {
@@ -32,20 +35,8 @@ public class CsvParser {
     @Autowired
     private MatchRepository matchRepository;
     @Autowired
-    private RecordRepository recordRepository;
+    private MatchRecordRepository recordRepository;
 
-    private static final List<DateTimeFormatter> dateFormatters = Arrays.asList(
-            DateTimeFormatter.ofPattern("M/d/yyyy"), //US short
-            DateTimeFormatter.ofPattern("yyyy-MM-dd"), // ISO
-            DateTimeFormatter.ofPattern("dd/MM/yyyy"), // European short
-            DateTimeFormatter.ofPattern("d-MMM-yyyy"), //European verbose
-            DateTimeFormatter.ofPattern("MM-dd-yyyy"), //Another US format
-            DateTimeFormatter.ofPattern("yyyyMMdd") // No separator
-    );
-    private static final String PLAYERS_FILE_PATH = "C:\\Users\\User\\IdeaProjects\\FinalExam\\data\\players.csv";
-    private static final String TEAMS_FILE_PATH = "C:\\Users\\User\\IdeaProjects\\FinalExam\\data\\teams.csv";
-    private static final String MATCHES_FILE_PATH = "C:\\Users\\User\\IdeaProjects\\FinalExam\\data\\matches.csv";
-    private static final String RECORDS_FILE_PATH = "C:\\Users\\User\\IdeaProjects\\FinalExam\\data\\records.csv";
 
     private List<String[]> readCsv(String filePath) throws IOException {
         List<String[]> rows = new ArrayList<>();
@@ -168,14 +159,14 @@ public class CsvParser {
     }
 
     private LocalDate parseDate(String date) {
-        for (DateTimeFormatter formatter : CsvParser.dateFormatters) {
+        for (DateTimeFormatter formatter : DateFormatConstants.DATE_FORMATTERS) {
             try {
                 return LocalDate.parse(date, formatter);
             } catch (DateTimeParseException e) {
                 //Ignore
             }
         }
-        throw new IllegalArgumentException("Date format not supported: " + date);
+        throw new IllegalArgumentException(String.format(ErrorMessages.DATE_FORMAT_MESSAGE, date));
     }
 
     //Populating the database when starting the application
@@ -184,18 +175,18 @@ public class CsvParser {
         try {
             //Load teams first
             loadTeams();
-            System.out.println("Teams loaded successfully");
+            System.out.println(ErrorMessages.TEAMS_LOADING_MESSAGE);
             //Load players after teams
             loadPlayers();
-            System.out.println("Players loaded successfully");
+            System.out.println(ErrorMessages.PLAYERS_LOADING_MESSAGE);
             //Load matches after players
             loadMatches();
-            System.out.println("Matches loaded successfully");
+            System.out.println(ErrorMessages.MATCHES_LOADING_MESSAGE);
             //Load records last
             loadRecords();
-            System.out.println("Records loaded successfully");
+            System.out.println(ErrorMessages.RECORDS_LOADING_MESSAGE);
         } catch (IOException e) {
-            System.out.println("Error occurred while populating the database: " + e.getMessage());
+            System.out.println(ErrorMessages.LOADING_ERROR_MESSAGE);
         }
     }
 }
