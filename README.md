@@ -29,7 +29,7 @@
 The data is loaded in the database automatically, ensuring that records are inserted in the correct sequence to maintain data consistency.
 
 **Algorithm for Player Pairing**
-The core functionality of this application is an algorithm that calculates the duration of two football players have played together in the same matches. Here's a high-level overview of the algorithm:
+ - The core functionality of this application is an algorithm that calculates the duration of two football players have played together in the same matches. Here's a high-level overview of the algorithm:
 1. Input: For each match, the system loads records for all players and the time they spent on the field.
 2. Processing: The algorithm identifies pairs of players who have played together in the same matches. It calculates the shared playing time by comparing the fromMinutes and toMinutes values for each player in a given match.
 3. Output: The results, which show the total time two players have played together across multiple matches, are returned in JSON format.
