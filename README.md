@@ -1,7 +1,7 @@
 # Football Player Pairing Application
 
 **Overview**
-This is a Spring Boot application designed to manage football matches, teams, players and their associated records. The objective is to calculate the duration two football players have played together in common matches. The application reads input data from CSV files and populates the database automatically. Determining and calculating shared playing time for specific pairs of players.
+ - This is a Spring Boot application designed to manage football matches, teams, players and their associated records. The objective is to calculate the duration two football players have played together in common matches. The application reads input data from CSV files and populates the database automatically. Determining and calculating shared playing time for specific pairs of players.
 
 **Features**
  - **CRUD Operations:** The application supports standard CRUD operations for teams, players and matches.
