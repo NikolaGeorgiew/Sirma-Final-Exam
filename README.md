@@ -20,7 +20,7 @@
  - RESTful Web Services
 
 **CSV Data Import Flow**
-When the application starts, CSV files for teams, players, matches and records are loaded in the following order:
+ - When the application starts, CSV files for teams, players, matches and records are loaded in the following order:
 1. Teams
 2. Players
 3. Matches
