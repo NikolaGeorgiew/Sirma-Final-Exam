@@ -12,8 +12,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class PlayerPairingService {
+
+    private final MatchRecordRepository recordRepository;
+
     @Autowired
-    private MatchRecordRepository recordRepository;
+    public PlayerPairingService(MatchRecordRepository recordRepository) {
+        this.recordRepository = recordRepository;
+    }
 
     //Helper method to calculate overlap in minutes for two players in a match
     private int calculateOverlap(MatchRecord record1, MatchRecord record2) {
@@ -37,7 +42,7 @@ public class PlayerPairingService {
 
         //Group records by match
         Map<Long, List<MatchRecord>> recordsByMatch =
-                records.stream().collect(Collectors.groupingBy(record -> record.getMatch().getId()));
+                records.stream().collect(Collectors.groupingBy(mr -> mr.getMatch().getId()));
 
         //Iterate through each match's records
         for (Map.Entry<Long, List<MatchRecord>> matchEntry : recordsByMatch.entrySet()) {
@@ -68,6 +73,6 @@ public class PlayerPairingService {
         return playerPairPlaytime.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .map(entry -> entry.getKey() + "," + entry.getValue())
-                .collect(Collectors.toList());
+                .toList();
     }
 }

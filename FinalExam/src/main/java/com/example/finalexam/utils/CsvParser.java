@@ -12,12 +12,16 @@ import com.example.finalexam.model.MatchRecord;
 import com.example.finalexam.repository.MatchRepository;
 import com.example.finalexam.repository.MatchRecordRepository;
 import jakarta.annotation.PostConstruct;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -27,19 +31,28 @@ import java.util.List;
 @Component
 public class CsvParser {
 
-    @Autowired
-    private PlayerRepository playerRepository;
-    @Autowired
-    private TeamRepository teamRepository;
-    @Autowired
-    private MatchRepository matchRepository;
-    @Autowired
-    private MatchRecordRepository recordRepository;
+    private final PlayerRepository playerRepository;
+    private final TeamRepository teamRepository;
+    private final MatchRepository matchRepository;
+    private final MatchRecordRepository recordRepository;
+    private final FilePaths filePaths;
+    private static final Logger logger = LoggerFactory.getLogger(CsvParser.class);
+    private final ResourceLoader resourceLoader;
 
+    @Autowired
+    public CsvParser(PlayerRepository playerRepository, TeamRepository teamRepository, MatchRepository matchRepository, MatchRecordRepository recordRepository, FilePaths filePaths, ResourceLoader resourceLoader) {
+        this.playerRepository = playerRepository;
+        this.teamRepository = teamRepository;
+        this.matchRepository = matchRepository;
+        this.recordRepository = recordRepository;
+        this.filePaths = filePaths;
+        this.resourceLoader = resourceLoader;
+    }
 
     private List<String[]> readCsv(String filePath) throws IOException {
         List<String[]> rows = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        Resource resource = resourceLoader.getResource(filePath);
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
             String line;
             boolean isFirstRow = true;
             while ((line = br.readLine()) != null) {
@@ -55,7 +68,7 @@ public class CsvParser {
     }
 
     public void loadPlayers() throws IOException {
-        List<String[]> rows = readCsv(FilePaths.PLAYERS_FILE_PATH);
+        List<String[]> rows = readCsv(filePaths.getPlayersFilePath());
         List<Player> players = new ArrayList<>();
 
         for (String[] values : rows) {
@@ -81,7 +94,7 @@ public class CsvParser {
     }
 
     public void loadMatches() throws IOException {
-        List<String[]> rows = readCsv(FilePaths.MATCHES_FILE_PATH);
+        List<String[]> rows = readCsv(filePaths.getMatchesFilePath());
         List<Match> matches = new ArrayList<>();
 
         for (String[] values : rows) {
@@ -104,7 +117,7 @@ public class CsvParser {
     }
 
     public void loadTeams() throws IOException {
-        List<String[]> rows = readCsv(FilePaths.TEAMS_FILE_PATH);
+        List<String[]> rows = readCsv(filePaths.getTeamsFilePath());
         List<Team> teams = new ArrayList<>();
 
         for (String[] values : rows) {
@@ -122,7 +135,7 @@ public class CsvParser {
     }
 
     public void loadRecords() throws IOException {
-        List<String[]> rows = readCsv(FilePaths.RECORDS_FILE_PATH);
+        List<String[]> rows = readCsv(filePaths.getRecordsFilePath());
         List<MatchRecord> records = new ArrayList<>();
 
         for (String[] values : rows) {
@@ -174,18 +187,18 @@ public class CsvParser {
         try {
             //Load teams first
             loadTeams();
-            System.out.println(ErrorMessages.TEAMS_LOADING_MESSAGE);
+            logger.info(ErrorMessages.TEAMS_LOADING_MESSAGE);
             //Load players after teams
             loadPlayers();
-            System.out.println(ErrorMessages.PLAYERS_LOADING_MESSAGE);
+            logger.info(ErrorMessages.PLAYERS_LOADING_MESSAGE);
             //Load matches after players
             loadMatches();
-            System.out.println(ErrorMessages.MATCHES_LOADING_MESSAGE);
+            logger.info(ErrorMessages.MATCHES_LOADING_MESSAGE);
             //Load records last
             loadRecords();
-            System.out.println(ErrorMessages.RECORDS_LOADING_MESSAGE);
+            logger.info(ErrorMessages.RECORDS_LOADING_MESSAGE);
         } catch (IOException e) {
-            System.out.println(ErrorMessages.LOADING_ERROR_MESSAGE);
+            logger.error(ErrorMessages.LOADING_ERROR_MESSAGE);
         }
     }
 }

@@ -14,10 +14,15 @@ import java.util.List;
 
 @Service
 public class TeamService implements CrudService<Team> {
+    private final TeamRepository teamRepository;
+
+    private final PlayerRepository playerRepository;
+
     @Autowired
-    private TeamRepository teamRepository;
-    @Autowired
-    private PlayerRepository playerRepository;
+    public TeamService(TeamRepository teamRepository, PlayerRepository playerRepository) {
+        this.teamRepository = teamRepository;
+        this.playerRepository = playerRepository;
+    }
 
     //Get all teams
     @Override
@@ -34,7 +39,9 @@ public class TeamService implements CrudService<Team> {
     @Override
     public Team getEntityById(Long id) {
         //Check if team is missing and returning entity or exception message
-        return teamRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.TEAM_NOT_FOUND_MESSAGE, id)));
+        return teamRepository
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.TEAM_NOT_FOUND_MESSAGE, id)));
     }
 
     //Create a team
@@ -53,9 +60,7 @@ public class TeamService implements CrudService<Team> {
     @Override
     public Team updateEntity(Long id, Team updatedTeam) {
         //Fetch the existing team from the repository or return exception
-        Team existingTeam = teamRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.TEAM_NOT_FOUND_MESSAGE, id)));
-
+        Team existingTeam = getEntityById(id);
         //Check if the fields are not updated(no changes)
         if (hasNoChanges(updatedTeam, existingTeam)) {
             throw new NoChangesMadeException(ErrorMessages.NO_CHANGES_MADE_MESSAGE);
@@ -72,8 +77,7 @@ public class TeamService implements CrudService<Team> {
     @Override
     public void deleteEntity(Long id) {
         //Check if the team exists
-        teamRepository
-                .findById(id).orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.TEAM_NOT_FOUND_MESSAGE, id)));
+        getEntityById(id);
         //Check if there are players in the team
         if (playerRepository.existsByTeamId(id)) {
             throw new IllegalStateException(ErrorMessages.DELETING_WITH_RELATIONS_MESSAGE);

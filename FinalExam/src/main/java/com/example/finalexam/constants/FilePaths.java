@@ -1,11 +1,36 @@
 package com.example.finalexam.constants;
 
-public class FilePaths {
-    public static final String PLAYERS_FILE_PATH = "C:\\Users\\User\\IdeaProjects\\FinalExam\\data\\players.csv";
-    public static final String TEAMS_FILE_PATH = "C:\\Users\\User\\IdeaProjects\\FinalExam\\data\\teams.csv";
-    public static final String MATCHES_FILE_PATH = "C:\\Users\\User\\IdeaProjects\\FinalExam\\data\\matches.csv";
-    public static final String RECORDS_FILE_PATH = "C:\\Users\\User\\IdeaProjects\\FinalExam\\data\\records.csv";
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-    private FilePaths() {
+@Component
+public class FilePaths {
+    @Value("${file.players}")
+    private String playersFilePath;
+
+    @Value("${file.teams}")
+    private String teamsFilePath;
+
+    @Value("${file.matches}")
+    private String matchesFilePath;
+
+    @Value("${file.records}")
+    private String recordsFilePath;
+
+    // Getters
+    public String getPlayersFilePath() {
+        return playersFilePath;
+    }
+
+    public String getTeamsFilePath() {
+        return teamsFilePath;
+    }
+
+    public String getMatchesFilePath() {
+        return matchesFilePath;
+    }
+
+    public String getRecordsFilePath() {
+        return recordsFilePath;
     }
 }

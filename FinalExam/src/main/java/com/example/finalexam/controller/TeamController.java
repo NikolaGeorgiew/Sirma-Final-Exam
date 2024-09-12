@@ -12,8 +12,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/teams")
 public class TeamController {
+    private final TeamService teamService;
+
     @Autowired
-    private TeamService teamService;
+    public TeamController(TeamService teamService) {
+        this.teamService = teamService;
+    }
 
     //Get all teams
     @GetMapping()
@@ -30,7 +34,7 @@ public class TeamController {
     }
 
     //Create a team
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<Team> createTeam(@RequestBody Team team) {
         Team createdTeam = teamService.createEntity(team);
         return new ResponseEntity<>(createdTeam, HttpStatus.CREATED);

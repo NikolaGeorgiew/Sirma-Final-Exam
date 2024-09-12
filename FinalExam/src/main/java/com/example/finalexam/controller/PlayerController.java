@@ -12,8 +12,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/players")
 public class PlayerController {
+
+    private final PlayerService playerService;
+
     @Autowired
-    private PlayerService playerService;
+    public PlayerController(PlayerService playerService) {
+        this.playerService = playerService;
+    }
 
     //Get all players
     @GetMapping()
@@ -30,7 +35,7 @@ public class PlayerController {
     }
 
     //Create a new player
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<Player> createPlayer(@RequestBody Player player) {
         Player createdPlayer = playerService.createEntity(player);
         return new ResponseEntity<>(createdPlayer, HttpStatus.CREATED);

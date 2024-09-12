@@ -9,8 +9,13 @@ import java.util.List;
 
 @RestController
 public class PlayerPairController {
+
+    private final PlayerPairingService playerPairingService;
+
     @Autowired
-    private PlayerPairingService playerPairingService;
+    public PlayerPairController(PlayerPairingService playerPairingService) {
+        this.playerPairingService = playerPairingService;
+    }
 
     @GetMapping("/player-pairs")
     public List<String> getPlayerPairsWithMaxPlaytime() {

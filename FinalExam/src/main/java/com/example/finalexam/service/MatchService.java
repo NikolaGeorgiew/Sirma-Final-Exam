@@ -19,10 +19,16 @@ import java.util.List;
 
 @Service
 public class MatchService implements CrudService<Match> {
+
+    private final MatchRepository matchRepository;
+
+    private final MatchRecordRepository recordRepository;
+
     @Autowired
-    private MatchRepository matchRepository;
-    @Autowired
-    private MatchRecordRepository recordRepository;
+    public MatchService(MatchRepository matchRepository, MatchRecordRepository recordRepository) {
+        this.matchRepository = matchRepository;
+        this.recordRepository = recordRepository;
+    }
 
     //Get all matches
     @Override
@@ -40,7 +46,8 @@ public class MatchService implements CrudService<Match> {
     public Match getEntityById(Long id) {
         //Check if match is missing and returning entity or exception message
         return matchRepository
-                .findById(id).orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.MATCH_NOT_FOUND_MESSAGE, id)));
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.MATCH_NOT_FOUND_MESSAGE, id)));
     }
 
     //Create a match
@@ -55,19 +62,11 @@ public class MatchService implements CrudService<Match> {
         return matchRepository.save(match);
     }
 
-    //Helper method
-    public Match createMatch(MatchDTO matchDTO) {
-        Match match = mapDtoToMatch(matchDTO);
-        return createEntity(match);
-
-    }
-
     //Update a match
     @Override
     public Match updateEntity(Long id, Match updatedMatch) {
         //Fetch the existing match from the repository or return exception
-        Match existingMatch = matchRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.MATCH_NOT_FOUND_MESSAGE, id)));
+        Match existingMatch = getEntityById(id);
         ///Check if the fields are not updated
         if (hasNoChanges(existingMatch, updatedMatch)) {
             throw new NoChangesMadeException(ErrorMessages.NO_CHANGES_MADE_MESSAGE);
@@ -82,18 +81,11 @@ public class MatchService implements CrudService<Match> {
         return matchRepository.save(existingMatch);
     }
 
-    //Helper method
-    public Match updateMatch(Long id, MatchDTO matchDTO) {
-        Match updatedMatch = mapDtoToMatch(matchDTO);
-        return updateEntity(id, updatedMatch);
-    }
-
     //Delete a match by ID
     @Override
     public void deleteEntity(Long id) {
         //Check if the match exist
-        matchRepository
-                .findById(id).orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.MATCH_NOT_FOUND_MESSAGE, id)));
+        getEntityById(id);
         //Check if any match records are associated with this match
         if (recordRepository.existsByMatchId(id)) {
             throw new IllegalStateException(ErrorMessages.DELETING_WITH_RELATIONS_MESSAGE);
@@ -102,9 +94,22 @@ public class MatchService implements CrudService<Match> {
         matchRepository.deleteById(id);
     }
 
+    //Helper method
+    public Match createMatch(MatchDTO matchDTO) {
+        Match match = mapDtoToMatch(matchDTO);
+        return createEntity(match);
+
+    }
+
+    //Helper method
+    public Match updateMatch(Long id, MatchDTO matchDTO) {
+        Match updatedMatch = mapDtoToMatch(matchDTO);
+        return updateEntity(id, updatedMatch);
+    }
+
     private static boolean hasNoChanges(Match existingMatch, Match updatedMatch) {
-        return existingMatch.getaTeamID() == updatedMatch.getaTeamID() &&
-                existingMatch.getbTeamID() == updatedMatch.getbTeamID() &&
+        return existingMatch.getaTeamID().equals(updatedMatch.getaTeamID()) &&
+                existingMatch.getbTeamID().equals(updatedMatch.getbTeamID()) &&
                 existingMatch.getDate().equals(updatedMatch.getDate()) &&
                 existingMatch.getScore().equals(updatedMatch.getScore());
     }

@@ -13,8 +13,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/matches")
 public class MatchController {
+    private final MatchService matchService;
+
     @Autowired
-    private MatchService matchService;
+    public MatchController(MatchService matchService) {
+        this.matchService = matchService;
+    }
 
     //Get all matches
     @GetMapping()
@@ -31,7 +35,7 @@ public class MatchController {
     }
 
     //Create a match
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<Match> createMatch(@RequestBody MatchDTO matchDTO) {
         Match createdMatch = matchService.createMatch(matchDTO);
         return new ResponseEntity<>(createdMatch, HttpStatus.CREATED);

@@ -15,12 +15,19 @@ import java.util.List;
 
 @Service
 public class PlayerService implements CrudService<Player> {
+
+    private final PlayerRepository playerRepository;
+
+    private final TeamRepository teamRepository;
+
+    private final MatchRecordRepository recordRepository;
+
     @Autowired
-    private PlayerRepository playerRepository;
-    @Autowired
-    private TeamRepository teamRepository;
-    @Autowired
-    private MatchRecordRepository recordRepository;
+    public PlayerService(PlayerRepository playerRepository, TeamRepository teamRepository, MatchRecordRepository recordRepository) {
+        this.playerRepository = playerRepository;
+        this.teamRepository = teamRepository;
+        this.recordRepository = recordRepository;
+    }
 
     // Get all players
     @Override
@@ -64,8 +71,7 @@ public class PlayerService implements CrudService<Player> {
             throw new EntityNotFoundException(String.format(ErrorMessages.TEAM_NOT_FOUND_MESSAGE, updatedPlayer.getTeam().getId()));
         }
         //Fetch the existing player from the repository or return exception
-        Player existingPlayer = playerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.PLAYER_NOT_FOUND_MESSAGE, id)));
+        Player existingPlayer = getEntityById(id);
         //Check if the fields are not updated(no changes)
         if (hasNoChanges(updatedPlayer, existingPlayer)) {
             throw new NoChangesMadeException(ErrorMessages.NO_CHANGES_MADE_MESSAGE);
@@ -83,8 +89,7 @@ public class PlayerService implements CrudService<Player> {
     @Override
     public void deleteEntity(Long id) {
         //Check if the player exists
-        playerRepository
-                .findById(id).orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.PLAYER_NOT_FOUND_MESSAGE, id)));
+        getEntityById(id);
         //Check if any match records are associated with this player
         if (recordRepository.existsByPlayerId(id)) {
             throw new IllegalStateException(ErrorMessages.DELETING_WITH_RELATIONS_MESSAGE);
@@ -94,7 +99,7 @@ public class PlayerService implements CrudService<Player> {
 
     //Validation method
     private static boolean hasNoChanges(Player updatedPlayer, Player existingPlayer) {
-        return existingPlayer.getTeamNumber() == updatedPlayer.getTeamNumber() &&
+        return existingPlayer.getTeamNumber().equals(updatedPlayer.getTeamNumber()) &&
                 existingPlayer.getPosition().equals(updatedPlayer.getPosition()) &&
                 existingPlayer.getFullName().equals(updatedPlayer.getFullName()) &&
                 existingPlayer.getTeam().equals(updatedPlayer.getTeam());
