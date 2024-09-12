@@ -1,15 +1,16 @@
 package com.example.finalexam.utils;
 
 import com.example.finalexam.constants.DateFormatConstants;
+import com.example.finalexam.constants.FilePaths;
+import com.example.finalexam.model.Player;
+import com.example.finalexam.model.Team;
+import com.example.finalexam.repository.PlayerRepository;
+import com.example.finalexam.repository.TeamRepository;
 import com.example.finalexam.constants.ErrorMessages;
 import com.example.finalexam.model.Match;
 import com.example.finalexam.model.MatchRecord;
-import com.example.finalexam.model.Player;
-import com.example.finalexam.model.Team;
 import com.example.finalexam.repository.MatchRepository;
-import com.example.finalexam.repository.PlayerRepository;
 import com.example.finalexam.repository.MatchRecordRepository;
-import com.example.finalexam.repository.TeamRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,8 +23,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.finalexam.constants.FilePaths.*;
 
 @Component
 public class CsvParser {
@@ -56,7 +55,7 @@ public class CsvParser {
     }
 
     public void loadPlayers() throws IOException {
-        List<String[]> rows = readCsv(PLAYERS_FILE_PATH);
+        List<String[]> rows = readCsv(FilePaths.PLAYERS_FILE_PATH);
         List<Player> players = new ArrayList<>();
 
         for (String[] values : rows) {
@@ -82,7 +81,7 @@ public class CsvParser {
     }
 
     public void loadMatches() throws IOException {
-        List<String[]> rows = readCsv(MATCHES_FILE_PATH);
+        List<String[]> rows = readCsv(FilePaths.MATCHES_FILE_PATH);
         List<Match> matches = new ArrayList<>();
 
         for (String[] values : rows) {
@@ -105,7 +104,7 @@ public class CsvParser {
     }
 
     public void loadTeams() throws IOException {
-        List<String[]> rows = readCsv(TEAMS_FILE_PATH);
+        List<String[]> rows = readCsv(FilePaths.TEAMS_FILE_PATH);
         List<Team> teams = new ArrayList<>();
 
         for (String[] values : rows) {
@@ -123,7 +122,7 @@ public class CsvParser {
     }
 
     public void loadRecords() throws IOException {
-        List<String[]> rows = readCsv(RECORDS_FILE_PATH);
+        List<String[]> rows = readCsv(FilePaths.RECORDS_FILE_PATH);
         List<MatchRecord> records = new ArrayList<>();
 
         for (String[] values : rows) {
