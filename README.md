@@ -14,7 +14,7 @@
  - Java
  - Spring Boot
  - Spring Data JPA
- - PostgreSQL
+ - PostgresSQL
  - Jakarta Persistence API
  - CSV File Handling
  - RESTful Web Services
