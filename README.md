@@ -40,17 +40,17 @@ The data is loaded in the database automatically, ensuring that records are inse
 |-------------|--------------------|--------------------------------------|
 | GET         | `/teams`           | Retrieve all teams                   |
 | GET         | `/teams/{id}`      | Retrieve a specific team by ID       |
-| POST        | `/teams/create`    | Create a new team                    |
+| POST        | `/teams`    | Create a new team                    |
 | PUT         | `/teams/{id}`      | Update an existing team by ID        |
 | DELETE      | `/teams/{id}`      | Delete a team by ID                  |
 | GET         | `/players`         | Retrieve all players                 |
 | GET         | `/players/{id}`    | Retrieve a specific player by ID     |
-| POST        | `/players/create`  | Create a new player                  |
+| POST        | `/players`  | Create a new player                  |
 | PUT         | `/players/{id}`    | Update an existing player by ID      |
 | DELETE      | `/players/{id}`    | Delete a player by ID                |
 | GET         | `/matches`         | Retrieve all matches                 |
 | GET         | `/matches/{id}`    | Retrieve a specific match by ID      |
-| POST        | `/matches/create`  | Create a new match                   |
+| POST        | `/matches`  | Create a new match                   |
 | PUT         | `/matches/{id}`    | Update an existing match by ID       |
 | DELETE      | `/matches/{id}`    | Delete a match by ID                 |
 | GET         | `/player-pairs`    | Get player pairs and their playtime  |
