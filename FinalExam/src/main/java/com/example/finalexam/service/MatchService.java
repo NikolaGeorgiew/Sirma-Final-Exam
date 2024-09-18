@@ -59,15 +59,16 @@ public class MatchService implements CrudService<Match> {
         if (matchExists) {
             throw new EntityAlreadyExistsException(ErrorMessages.MATCH_ALREADY_EXISTS_MESSAGE);
         }
+        match.setId(null);
         return matchRepository.save(match);
     }
 
     //Update a match
     @Override
     public Match updateEntity(Long id, Match updatedMatch) {
-        //Fetch the existing match from the repository or return exception
+        //  Fetch the existing match from the repository or return exception
         Match existingMatch = getEntityById(id);
-        ///Check if the fields are not updated
+        //  Check if the fields are not updated
         if (hasNoChanges(existingMatch, updatedMatch)) {
             throw new NoChangesMadeException(ErrorMessages.NO_CHANGES_MADE_MESSAGE);
         }

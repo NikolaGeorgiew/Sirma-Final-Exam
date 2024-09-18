@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Table(name = "matches")
@@ -50,5 +51,19 @@ public class Match extends BaseEntity {
 
     public void setScore(String score) {
         this.score = score;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Match match = (Match) o;
+        return Objects.equals(aTeamID, match.aTeamID) && Objects.equals(bTeamID, match.bTeamID) && Objects.equals(date, match.date) && Objects.equals(score, match.score);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), aTeamID, bTeamID, date, score);
     }
 }

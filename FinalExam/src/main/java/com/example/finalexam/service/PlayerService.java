@@ -60,6 +60,7 @@ public class PlayerService implements CrudService<Player> {
         if (playerExists) {
             throw new EntityAlreadyExistsException(ErrorMessages.PLAYER_ALREADY_EXISTS_MESSAGE);
         }
+        player.setId(null);
         return playerRepository.save(player);
     }
 

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DateFormatConstants {
-    public static final List<DateTimeFormatter> DATE_FORMATTERS = Arrays.asList(
+    public static final List<DateTimeFormatter> DATE_FORMATTERS = List.of(
             DateTimeFormatter.ofPattern("M/d/yyyy"), //US short
             DateTimeFormatter.ofPattern("yyyy-MM-dd"), // ISO
             DateTimeFormatter.ofPattern("dd/MM/yyyy"), // European short

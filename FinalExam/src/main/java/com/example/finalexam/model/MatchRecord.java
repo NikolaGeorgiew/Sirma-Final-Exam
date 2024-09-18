@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "records")
 @ValidTimeRange
@@ -55,5 +57,19 @@ public class MatchRecord extends BaseEntity {
 
     public void setToMinutes(Integer toMinutes) {
         this.toMinutes = toMinutes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        MatchRecord that = (MatchRecord) o;
+        return Objects.equals(player, that.player) && Objects.equals(match, that.match) && Objects.equals(fromMinutes, that.fromMinutes) && Objects.equals(toMinutes, that.toMinutes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), player, match, fromMinutes, toMinutes);
     }
 }

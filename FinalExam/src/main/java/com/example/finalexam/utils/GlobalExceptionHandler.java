@@ -30,14 +30,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(EntityAlreadyExistsException.class)
     public ResponseEntity<String> handleEntityAlreadyExistsException(EntityAlreadyExistsException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
+
     @ExceptionHandler(NoChangesMadeException.class)
     public ResponseEntity<String> handleNoChangesMadeException(NoChangesMadeException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_MODIFIED);
     }
+
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<String> handleDeletingEntityWithRelations(IllegalStateException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);

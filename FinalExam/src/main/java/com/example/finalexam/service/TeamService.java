@@ -53,6 +53,7 @@ public class TeamService implements CrudService<Team> {
         if (teamExists) {
             throw new EntityAlreadyExistsException(ErrorMessages.TEAM_ALREADY_EXISTS_MESSAGE);
         }
+        team.setId(null);
         return teamRepository.save(team);
     }
 

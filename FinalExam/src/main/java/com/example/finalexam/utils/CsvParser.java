@@ -27,16 +27,20 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class CsvParser {
+
+    private static final Logger logger = LoggerFactory.getLogger(CsvParser.class);
 
     private final PlayerRepository playerRepository;
     private final TeamRepository teamRepository;
     private final MatchRepository matchRepository;
     private final MatchRecordRepository recordRepository;
     private final FilePaths filePaths;
-    private static final Logger logger = LoggerFactory.getLogger(CsvParser.class);
     private final ResourceLoader resourceLoader;
 
     @Autowired
@@ -47,6 +51,27 @@ public class CsvParser {
         this.recordRepository = recordRepository;
         this.filePaths = filePaths;
         this.resourceLoader = resourceLoader;
+    }
+
+    //Populating the database when starting the application
+    @PostConstruct
+    public void populateDatabase() {
+        try {
+            //Load teams first
+            loadTeams();
+            logger.info(ErrorMessages.TEAMS_LOADING_MESSAGE);
+            //Load players after teams
+            loadPlayers();
+            logger.info(ErrorMessages.PLAYERS_LOADING_MESSAGE);
+            //Load matches after players
+            loadMatches();
+            logger.info(ErrorMessages.MATCHES_LOADING_MESSAGE);
+            //Load records last
+            loadRecords();
+            logger.info(ErrorMessages.RECORDS_LOADING_MESSAGE);
+        } catch (IOException e) {
+            logger.error(ErrorMessages.LOADING_ERROR_MESSAGE);
+        }
     }
 
     private List<String[]> readCsv(String filePath) throws IOException {
@@ -67,15 +92,20 @@ public class CsvParser {
         return rows;
     }
 
-    public void loadPlayers() throws IOException {
+    private void loadPlayers() throws IOException {
         List<String[]> rows = readCsv(filePaths.getPlayersFilePath());
         List<Player> players = new ArrayList<>();
+
+        List<Team> teams = teamRepository.findAll();
+        Map<Long, Team> teamIdMapping = teams.stream()
+                .collect(Collectors.toMap(Team::getId, Function.identity()));
 
         for (String[] values : rows) {
 
             //Fetch the corresponding team based on the TeamID from the CSV
             Long teamId = Long.parseLong(values[4].trim());
-            Team team = teamRepository.findById(teamId).orElse(null);
+//            Team team = teamRepository.findById(teamId).orElse(null);
+            Team team = teamIdMapping.get(teamId);
 
             // Create a new Player object and set its fields
             Player player = new Player();
@@ -93,7 +123,7 @@ public class CsvParser {
         playerRepository.saveAll(players);
     }
 
-    public void loadMatches() throws IOException {
+    private void loadMatches() throws IOException {
         List<String[]> rows = readCsv(filePaths.getMatchesFilePath());
         List<Match> matches = new ArrayList<>();
 
@@ -116,7 +146,7 @@ public class CsvParser {
         matchRepository.saveAll(matches);
     }
 
-    public void loadTeams() throws IOException {
+    private void loadTeams() throws IOException {
         List<String[]> rows = readCsv(filePaths.getTeamsFilePath());
         List<Team> teams = new ArrayList<>();
 
@@ -134,9 +164,17 @@ public class CsvParser {
         teamRepository.saveAll(teams);
     }
 
-    public void loadRecords() throws IOException {
+    private void loadRecords() throws IOException {
         List<String[]> rows = readCsv(filePaths.getRecordsFilePath());
         List<MatchRecord> records = new ArrayList<>();
+
+        List<Player> players = playerRepository.findAll();
+        Map<Long, Player> playerIdMapping = players.stream()
+                .collect(Collectors.toMap(Player::getId, Function.identity()));
+
+        List<Match> matches = matchRepository.findAll();
+        Map<Long,Match> matchIdMapping = matches.stream()
+                .collect(Collectors.toMap(Match::getId, Function.identity()));
 
         for (String[] values : rows) {
 
@@ -144,8 +182,10 @@ public class CsvParser {
             Long playerId = Long.parseLong(values[1].trim());
             Long matchId = Long.parseLong(values[2].trim());
 
-            Player player = playerRepository.findById(playerId).orElse(null);
-            Match match = matchRepository.findById(matchId).orElse(null);
+//            Player player = playerRepository.findById(playerId).orElse(null);
+//            Match match = matchRepository.findById(matchId).orElse(null);
+            Player player = playerIdMapping.get(playerId);
+            Match match = matchIdMapping.get(matchId);
 
             //Handle if the player ot match doesn't exist
             if (player == null || match == null) {
@@ -181,24 +221,4 @@ public class CsvParser {
         throw new IllegalArgumentException(String.format(ErrorMessages.DATE_FORMAT_MESSAGE, date));
     }
 
-    //Populating the database when starting the application
-    @PostConstruct
-    public void populateDatabase() {
-        try {
-            //Load teams first
-            loadTeams();
-            logger.info(ErrorMessages.TEAMS_LOADING_MESSAGE);
-            //Load players after teams
-            loadPlayers();
-            logger.info(ErrorMessages.PLAYERS_LOADING_MESSAGE);
-            //Load matches after players
-            loadMatches();
-            logger.info(ErrorMessages.MATCHES_LOADING_MESSAGE);
-            //Load records last
-            loadRecords();
-            logger.info(ErrorMessages.RECORDS_LOADING_MESSAGE);
-        } catch (IOException e) {
-            logger.error(ErrorMessages.LOADING_ERROR_MESSAGE);
-        }
-    }
 }

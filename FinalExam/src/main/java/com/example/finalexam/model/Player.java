@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "players")
 public class Player extends BaseEntity {
@@ -49,5 +51,19 @@ public class Player extends BaseEntity {
 
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Player player = (Player) o;
+        return Objects.equals(teamNumber, player.teamNumber) && Objects.equals(position, player.position) && Objects.equals(fullName, player.fullName) && Objects.equals(team, player.team);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), teamNumber, position, fullName, team);
     }
 }
