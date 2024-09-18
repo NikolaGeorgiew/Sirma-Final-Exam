@@ -173,7 +173,7 @@ public class CsvParser {
                 .collect(Collectors.toMap(Player::getId, Function.identity()));
 
         List<Match> matches = matchRepository.findAll();
-        Map<Long,Match> matchIdMapping = matches.stream()
+        Map<Long, Match> matchIdMapping = matches.stream()
                 .collect(Collectors.toMap(Match::getId, Function.identity()));
 
         for (String[] values : rows) {
