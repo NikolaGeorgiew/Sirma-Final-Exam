@@ -75,10 +75,6 @@ public class PlayerPairingService {
             }
         }
         //Sort the pairs by playtime in descending order
-//        return playerPairPlaytime.entrySet().stream()
-//                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
-//                .map(entry -> entry.getKey() + "," + entry.getValue())
-//                .toList();
         return playerPairPlaytime.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(limit)

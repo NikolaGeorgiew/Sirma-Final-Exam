@@ -21,8 +21,6 @@ public class PlayerPairController {
         this.playerPairingService = playerPairingService;
     }
 
-    //    public List<String> getPlayerPairsWithMaxPlaytime() {
-//        return playerPairingService.findPlayerPairsWithMaxPlaytime();
     @GetMapping("/player-pairs")
     public ResponseEntity<List<PlayerPairDTO>> getPlayerPairsWithMaxPlaytime(@RequestParam(defaultValue = "10") int limit) {
         List<PlayerPairDTO> playerPairsWithPlayTime = playerPairingService.findPlayerPairsWithMaxPlaytime(limit);

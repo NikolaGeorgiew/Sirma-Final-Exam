@@ -104,7 +104,6 @@ public class CsvParser {
 
             //Fetch the corresponding team based on the TeamID from the CSV
             Long teamId = Long.parseLong(values[4].trim());
-//            Team team = teamRepository.findById(teamId).orElse(null);
             Team team = teamIdMapping.get(teamId);
 
             // Create a new Player object and set its fields
@@ -182,8 +181,6 @@ public class CsvParser {
             Long playerId = Long.parseLong(values[1].trim());
             Long matchId = Long.parseLong(values[2].trim());
 
-//            Player player = playerRepository.findById(playerId).orElse(null);
-//            Match match = matchRepository.findById(matchId).orElse(null);
             Player player = playerIdMapping.get(playerId);
             Match match = matchIdMapping.get(matchId);
 
